@@ -3,9 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>API Test Page</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f7fa; 
+            color: #333; 
+            max-width: 700px; 
+            margin: 40px auto; 
+            padding: 25px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            color: #1a73e8; 
+            text-align: center;
+        }
+        form { 
+            display: flex; 
+            flex-direction: column; 
+        }
+        label { 
+            margin-bottom: 10px; 
+            font-weight: 600; 
+            color: #5f6368;
+        }
+        textarea { 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 1px solid #dfe1e5; 
+            margin-bottom: 20px; 
+            font-size: 16px; 
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        button { 
+            padding: 14px; 
+            background-color: #1a73e8; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: 600;
+            cursor: pointer; 
+            transition: background-color 0.2s; 
+        }
+        button:hover { 
+            background-color: #185abc; 
+        }
+        h2 { 
+            margin-top: 35px; 
+            border-bottom: 2px solid #dfe1e5; 
+            padding-bottom: 10px; 
+            color: #1a73e8;
+        }
+        pre { 
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 20px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-family: "Fira Code", "Courier New", monospace;
+        }
+    </style>
 </head>
 <body>
-    <script src="index.js"></script>
+    <h1>BFHL API Endpoint Tester</h1>
+    <form id="api-form">
+        <label for="data-input">Enter data (comma-separated):</label>
+        <textarea id="data-input" rows="4" placeholder="e.g., a,1,334,4,R,$" required></textarea>
+        <button type="submit">Send Request</button>
+    </form>
+
+    <h2>API Response</h2>
+    <pre><code id="response-output">Awaiting request...</code></pre>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('api-form');
+            const dataInput = document.getElementById('data-input');
+            const responseOutput = document.getElementById('response-output');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const rawData = dataInput.value;
+                const dataArray = rawData.split(',').map(item => item.trim()).filter(item => item);
+                const requestBody = { data: dataArray };
+
+                responseOutput.textContent = 'Sending request...';
+
+                try {
+                    const response = await fetch('/bfhl', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const result = await response.json();
+                    responseOutput.textContent = JSON.stringify(result, null, 2);
+
+                } catch (error) {
+                    responseOutput.textContent = `Error: ${error.message}`;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
