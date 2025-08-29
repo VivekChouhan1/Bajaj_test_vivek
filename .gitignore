@@ -1,0 +1,25 @@
+# Dependencies
+# This line tells Git to ignore the entire node_modules folder.
+/node_modules
+
+# Logs
+# Ignores log files.
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+# Ignores files containing sensitive keys and environment-specific settings.
+.env
+.env.local
+.env.*.local
+
+# Production build folder
+# Ignores compiled or built output.
+/build
+/dist
+
+# macOS specific files
+.DS_Store
